@@ -1,3 +1,4 @@
+const controller = require('../controllers/auth.controller.js');
 module.exports = function(app) {
     app.use(function(req, res, next) {
         res.header(
@@ -9,7 +10,7 @@ module.exports = function(app) {
     app.post(
         "/api/auth/signup",
         [],
-        (req, res) => { res.status(500).send({message: "signup to do"}) }
+        controller.signup
     );
     app.post(
         "/api/auth/signin",

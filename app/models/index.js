@@ -17,8 +17,9 @@ const sequelize = new Sequelize(
             idle: config.pool.idle,
         }
     }
-)
+);
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.user = require("../models/user.model.js")(sequelize, Sequelize);
 module.exports = db;
