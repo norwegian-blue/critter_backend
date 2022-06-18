@@ -10,6 +10,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // parse request of content-type - application/x-www-form-url-encoded
 app.use(bodyParser.urlencoded({ extended: true }));
+// routes
+require('./app/routes/auth.routes')(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
