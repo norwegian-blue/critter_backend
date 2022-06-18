@@ -12,6 +12,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // routes
 require('./app/routes/auth.routes')(app);
+// db
+const db = require('./app/models');
+db.sequelize.sync({force: true}).then(() => {
+    console.log('Drop and Resync DB');
+});
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
