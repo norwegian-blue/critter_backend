@@ -17,6 +17,6 @@ module.exports = function(app) {
     );
     app.post(
         "/api/auth/signin",
-        (req, res) => { res.status(500).send({message: "login to do"}) }
+        controller.signin
     );
 };
