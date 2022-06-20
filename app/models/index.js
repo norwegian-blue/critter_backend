@@ -1,4 +1,4 @@
-const config = process.NODE_ENV === 'production'
+const config = process.env.NODE_ENV === 'production'
     ? require("../config/db.config.js")
     : require("../config/db.dev-config.js");
 const Sequelize = require("sequelize");
