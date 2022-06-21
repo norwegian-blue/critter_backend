@@ -5,7 +5,7 @@ const app = express();
 // Static files
 const history = require("connect-history-api-fallback");
 const path = __dirname + '/app/views';
-app.use(history);
+app.use(history());
 app.use(express.static(path));
 // CORS
 if (process.env.NODE_ENV === "development") {
