@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkcritter_frontend"]=self["webpackChunkcritter_frontend"]||[]).push([[524],{3524:function(r,n,e){e.r(n),e.d(n,{default:function(){return a}});var t=e(3396);function u(r,n){return(0,t.wg)(),(0,t.iD)("h1",null,"Profile page: TODO")}var c=e(89);const f={},i=(0,c.Z)(f,[["render",u]]);var a=i}}]);
+//# sourceMappingURL=524.08e0aa60.js.map

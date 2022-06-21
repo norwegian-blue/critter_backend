@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+// Static files
+const path = __dirname + '/app/views';
+app.use(express.static(path));
 // CORS
 if (process.env.NODE_ENV === "development") {
     var corsOptions = {
@@ -19,6 +22,10 @@ require('./app/routes/auth.routes')(app);
 const db = require('./app/models');
 db.sequelize.sync().then(() => {
     console.log('Resynch DB');
+});
+// Serve home page
+app.get('/', (req, res) => {
+    res.sendFile(path + "index.html");
 });
 // Start server
 const PORT = process.env.PORT || 8080;
