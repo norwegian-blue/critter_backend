@@ -9,7 +9,7 @@ module.exports = function(app) {
         next();
     });
     app.post(
-        "/api/auth/signup",
+        "/api/auth/user",
         [
             verifySignup.checkDuplicateUsername
         ],
@@ -18,5 +18,13 @@ module.exports = function(app) {
     app.post(
         "/api/auth/signin",
         controller.signin
+    );
+    app.delete(
+        "/api/auth/user/:id",
+        (req, res) => {res.status(500).send({ message: `attempting to delete user ${req.params.id}`})}
+    );
+    app.put(
+        "/api/auth/user",
+        (req, res) => {res.status(500).send({ message: "not implemented" })}
     );
 };
