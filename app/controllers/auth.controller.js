@@ -49,3 +49,29 @@ exports.signin = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+exports.delete = (req, res) => {
+    // Delete the user from the Database
+    const id = req.params.id;
+    User.destroy({
+        where: {id: id}
+    })
+        .then(user => {
+            if(user) {
+                return res.send({
+                    message: `User ${id} was successfully deleted`
+                });
+            } else {
+                return res.status(409).send({
+                    message: `Could not delete User with id=${id}. Maybe user does not exist`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: `attempting to delete user ${req.params.id}`
+            });
+        });
+};
+exports.update = (req, res) => {
+    res.status(501).send({ message: "not implemented" })
+};

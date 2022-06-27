@@ -1,4 +1,4 @@
-const { verifySignup } = require("../middleware");
+const { verifySignup, authJwt } = require("../middleware");
 const controller = require('../controllers/auth.controller.js');
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -21,10 +21,18 @@ module.exports = function(app) {
     );
     app.delete(
         "/api/auth/user/:id",
-        (req, res) => {res.status(500).send({ message: `attempting to delete user ${req.params.id}`})}
+        [
+            authJwt.verifyToken,
+            authJwt.verifyId,
+        ],
+        controller.delete
     );
     app.put(
         "/api/auth/user",
-        (req, res) => {res.status(500).send({ message: "not implemented" })}
+        [
+            authJwt.verifyToken,
+            authJwt.verifyId
+        ],
+        controller.update
     );
 };
