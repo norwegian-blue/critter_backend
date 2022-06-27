@@ -2,6 +2,7 @@ const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
+const { user } = require("../models");
 const User = db.user;
 exports.signup = (req, res) => {
     // Save User to Database
@@ -67,11 +68,45 @@ exports.delete = (req, res) => {
             }
         })
         .catch(err => {
-            res.status(500).send({
-                message: `attempting to delete user ${req.params.id}`
+            return res.status(500).send({
+                message: `Server side error, coudl not to delete user ${id}`
             });
         });
 };
 exports.update = (req, res) => {
-    res.status(501).send({ message: "not implemented" })
+    // Update user information
+    const id = req.userId;
+    User.findOne({
+        where: {username: req.body.username}
+    })
+        .then(user => {
+            if (!user || (user && user.id === id)) {
+                // New username (no dubplicate) or password update of current user
+                User.update({
+                    username: req.body.username,
+                    password: bcrypt.hashSync(req.body.password, 8),
+                }, {
+                    where: {id: id}
+                })
+                    .then(user => {
+                        return res.status(200).send({
+                            id: id,
+                            username: req.body.username
+                        });
+                    })
+                    .catch(err => {
+                        return res.status(500).send({ message: "Unexpected server error: user update!" });
+                    });
+            } else {
+                // Duplicate username
+                return res.status(500).send({
+                    message: `Username -${user.username}- is already taken!`
+                });
+            }
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message: `Server side error, could not to delete user ${id}!`
+            })
+        });
 };
