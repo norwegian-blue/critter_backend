@@ -1,4 +1,5 @@
 const { authJwt } = require("../middleware");
+const controller = require("../controllers/creet.controller");
 module.exports = function(app) {
     app.use(function(req, res, next) {
         res.header(
@@ -12,6 +13,6 @@ module.exports = function(app) {
         [
             authJwt.verifyToken,
         ],
-        (req, res) => {return res.status(500).send({message: "not implemented"})}
+        controller.post
     );
 };
