@@ -37,11 +37,11 @@ exports.signin = (req, res) => {
                     message: "Invalid password!"
                 });
             }
-            var token = jwt.sign({ id: user.id }, config.secret, {
+            var token = jwt.sign({ id: user.userId }, config.secret, {
                 expiresIn: 86400 // 24 hours
             });
             res.status(200).send({
-                id: user.id,
+                id: user.userId,
                 username: user.username,
                 accessToken: token
             });
@@ -54,7 +54,7 @@ exports.delete = (req, res) => {
     // Delete the user from the Database
     const id = req.params.id;
     User.destroy({
-        where: {id: id}
+        where: {userId: id}
     })
         .then(user => {
             if(user) {
@@ -80,13 +80,13 @@ exports.update = (req, res) => {
         where: {username: req.body.username}
     })
         .then(user => {
-            if (!user || (user && user.id === id)) {
+            if (!user || (user && user.userId === id)) {
                 // New username (no dubplicate) or password update of current user
                 User.update({
                     username: req.body.username,
                     password: bcrypt.hashSync(req.body.password, 8),
                 }, {
-                    where: {id: id}
+                    where: {userId: id}
                 })
                     .then(user => {
                         return res.status(200).send({
@@ -99,7 +99,7 @@ exports.update = (req, res) => {
                     });
             } else {
                 // Duplicate username
-                return res.status(500).send({
+                return res.status(400).send({
                     message: `Username -${user.username}- is already taken!`
                 });
             }
