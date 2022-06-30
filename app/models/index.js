@@ -37,4 +37,17 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.creet = require("../models/creet.model.js")(sequelize, Sequelize);
+// Add association
+db.user.hasMany(db.creet, {
+    foreignKey: {
+        name: "userId",
+        allowNull: false,
+    },
+});
+db.creet.belongsTo(db.user, {
+    foreignKey: {
+        name: "userId",
+        allowNull: false,
+    },
+});
 module.exports = db;
