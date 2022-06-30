@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // routes
 require('./app/routes/auth.routes')(app);
+require('./app/routes/creet.routes')(app);
 // db
 const db = require('./app/models');
 db.sequelize.sync().then(() => {
