@@ -13,6 +13,13 @@ module.exports = function(app) {
         [
             authJwt.verifyToken,
         ],
-        controller.post
+        controller.postCreet
     );
+    app.get(
+        "/api/creets",
+        [
+            authJwt.verifyToken,
+        ],
+        controller.getAllCreets
+    )
 };
