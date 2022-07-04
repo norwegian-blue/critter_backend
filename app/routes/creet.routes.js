@@ -21,5 +21,12 @@ module.exports = function(app) {
             authJwt.verifyToken,
         ],
         controller.getAllCreets
+    );
+    app.delete(
+        "/api/creets/:id",
+        [
+            authJwt.verifyToken,
+        ],
+        controller.deleteCreet
     )
 };
