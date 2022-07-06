@@ -8,7 +8,7 @@ exports.postCreet = (req, res) => {
         userId: req.userId,
     })
         .then((creet) => {
-            return res.status(200).send({ id: creet.creetId });
+            return res.status(200).send({ id: creet.id });
         })
         .catch(err => {
             return res.status(500).send({ message: err.message });
@@ -19,7 +19,7 @@ exports.getAllCreets = (req, res) => {
     Creet.findAll({ 
         include: {
             model: User,
-            attributes: ["username", "userId"],
+            attributes: ["username", "id"],
         },
         order: [["createdAt", "DESC"]],
         }) 
@@ -36,7 +36,7 @@ exports.deleteCreet = (req, res) => {
     const creetId = req.params.id;
     Creet.destroy({
         where: {
-            creetId: creetId,
+            id: creetId,
             userId: reqUserId,
         }
     })
@@ -56,7 +56,7 @@ exports.updateCreet = (req, res) => {
     const creetId = req.params.id;
     Creet.update({ content: req.body.content }, {
             where: {
-            creetId: creetId,
+            id: creetId,
             userId: reqUserId,
         },
     })

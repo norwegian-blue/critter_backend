@@ -10,7 +10,7 @@ exports.signup = (req, res) => {
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 8)
     })
-        .then(user => {
+        .then(() => {
             res.send({ message: "User was created successfully!" });
         })
         .catch(err => {
@@ -37,11 +37,11 @@ exports.signin = (req, res) => {
                     message: "Invalid password!"
                 });
             }
-            var token = jwt.sign({ id: user.userId }, config.secret, {
+            var token = jwt.sign({ id: user.id }, config.secret, {
                 expiresIn: 86400 // 24 hours
             });
             res.status(200).send({
-                id: user.userId,
+                id: user.id,
                 username: user.username,
                 accessToken: token
             });
@@ -52,50 +52,50 @@ exports.signin = (req, res) => {
 };
 exports.delete = (req, res) => {
     // Delete the user from the Database
-    const id = req.params.id;
+    const userId = req.params.id;
     User.destroy({
-        where: {userId: id}
+        where: {id: userId}
     })
         .then(user => {
             if(user) {
                 return res.send({
-                    message: `User ${id} was successfully deleted`
+                    message: `User ${userId} was successfully deleted`
                 });
             } else {
                 return res.status(409).send({
-                    message: `Could not delete User with id=${id}. Maybe user does not exist`
+                    message: `Could not delete User with id=${userId}. Maybe user does not exist`
                 });
             }
         })
         .catch(err => {
             return res.status(500).send({
-                message: `Server side error, coudl not to delete user ${id}`
+                message: `Server side error, coudl not to delete user ${userId}. ${err.message}`
             });
         });
 };
 exports.update = (req, res) => {
     // Update user information
-    const id = req.userId;
+    const userId = req.userId;
     User.findOne({
         where: {username: req.body.username}
     })
         .then(user => {
-            if (!user || (user && user.userId === id)) {
+            if (!user || (user && user.id === userId)) {
                 // New username (no dubplicate) or password update of current user
                 User.update({
                     username: req.body.username,
                     password: bcrypt.hashSync(req.body.password, 8),
                 }, {
-                    where: {userId: id}
+                    where: {id: userId}
                 })
-                    .then(user => {
+                    .then(() => {
                         return res.status(200).send({
-                            id: id,
+                            id: userId,
                             username: req.body.username
                         });
                     })
                     .catch(err => {
-                        return res.status(500).send({ message: "Unexpected server error: user update!" });
+                        return res.status(500).send({ message: `Unexpected server error: user update! ${err.message}` });
                     });
             } else {
                 // Duplicate username
@@ -106,7 +106,7 @@ exports.update = (req, res) => {
         })
         .catch(err => {
             return res.status(500).send({
-                message: `Server side error, could not to delete user ${id}!`
+                message: `Server side error, could not to delete user ${userId}! ${err.message}`
             })
         });
 };

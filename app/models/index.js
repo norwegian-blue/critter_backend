@@ -37,7 +37,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.creet = require("../models/creet.model.js")(sequelize, Sequelize);
-// Add association
+// User-Creets author association
 db.user.hasMany(db.creet, {
     foreignKey: {
         name: "userId",
@@ -50,4 +50,9 @@ db.creet.belongsTo(db.user, {
         allowNull: false,
     },
 });
+// Creet-Creet recreet association
+db.creet.hasOne(db.creet, { 
+    as: 'reCreet', 
+});
+
 module.exports = db;
