@@ -16,10 +16,13 @@ exports.postCreet = (req, res) => {
 };
 exports.getAllCreets = (req, res) => {
     // Return the entire creets Database
-    Creet.findAll({ include: {
-        model: User,
-        attributes: ["username", "userId"],
-        }}) 
+    Creet.findAll({ 
+        include: {
+            model: User,
+            attributes: ["username", "userId"],
+        },
+        order: [["createdAt", "DESC"]],
+        }) 
         .then(creets => {            
             return res.status(200).send(creets.map(el => el.toJSON()));
         })
