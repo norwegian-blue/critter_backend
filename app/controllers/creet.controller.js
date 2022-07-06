@@ -69,4 +69,30 @@ exports.updateCreet = (req, res) => {
         .catch(err => {
             return res.status(500).send({ message: err.message });
         });
-}
+};
+exports.recreet = (req, res) => {
+    // Check if not recreeting same author
+    const reqUserId = req.userId;
+    const reCreetId = req.params.id;
+    Creet.findByPk(reCreetId)
+        .then(creet => {
+            if (!creet) {
+                return res.status(409).send({ message: 'Could not find creet in database' });
+            } else if (creet.userId === reqUserId) {
+                return res.status(409).send({ message: 'Cannot re-creet self' });
+            }
+            // Add re-creet to database
+            return Creet.create({
+                content: req.body.content,
+                userId: reqUserId,
+                reCreetId: reCreetId,
+            });
+        })
+        .then(creet => {
+            console.log(creet);
+            return res.status(200).send({ id: creet.id });
+        })
+        .catch(err => {
+            return res.status(500).send({ message: err.message });
+        });
+};

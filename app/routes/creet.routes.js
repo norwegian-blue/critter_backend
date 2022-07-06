@@ -36,4 +36,12 @@ module.exports = function(app) {
         ],
         controller.updateCreet
     );
+    app.post(
+        "/api/creets/recreet/:id",
+        [
+            authJwt.verifyToken,
+        ],
+        controller.recreet
+
+    );
 };
