@@ -28,5 +28,12 @@ module.exports = function(app) {
             authJwt.verifyToken,
         ],
         controller.deleteCreet
-    )
+    );
+    app.put(
+        "/api/creets/:id",
+        [
+            authJwt.verifyToken,
+        ],
+        controller.updateCreet
+    );
 };

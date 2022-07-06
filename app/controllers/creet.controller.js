@@ -39,7 +39,7 @@ exports.deleteCreet = (req, res) => {
     })
     .then(creet => {
         if (!creet) {
-            return res.status(409).send('Could not delete creet, maybe not existing or wrong userId');
+            return res.status(409).send({ message: 'Could not delete creet, maybe not existing or wrong userId' });
         }
         return res.status(200).send();
     })
@@ -47,3 +47,23 @@ exports.deleteCreet = (req, res) => {
         return res.status(500).send({ message: err.message });
     });
 };
+exports.updateCreet = (req, res) => {
+    // Check same author as creet & update content
+    const reqUserId = req.userId;
+    const creetId = req.params.id;
+    Creet.update({ content: req.body.content }, {
+            where: {
+            creetId: creetId,
+            userId: reqUserId,
+        },
+    })
+        .then((creet) => {
+            if (!creet) {
+                return res.status(409).send({ message: 'Could not update creet, maybe not existing or wrong userId' });
+            }
+            return res.status(200).send()
+        })
+        .catch(err => {
+            return res.status(500).send({ message: err.message });
+        });
+}
