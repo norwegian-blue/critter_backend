@@ -51,7 +51,7 @@ db.creet.belongsTo(db.user, {
     },
 });
 // Creet-Creet recreet association
-db.creet.hasOne(db.creet, { 
+db.creet.belongsTo(db.creet, { 
     as: 'reCreet', 
 });
 
