@@ -1,6 +1,8 @@
 const db = require("../models");
 const Creet = db.creet; 
 const User = db.user;
+const pagination = require('./pagination.controller');
+
 exports.postCreet = (req, res) => {
     // Save a new Creet to the Database
     Creet.create({
@@ -14,9 +16,14 @@ exports.postCreet = (req, res) => {
             return res.status(500).send({ message: err.message });
         });
 };
+
 exports.getAllCreets = (req, res) => {
     // Return the entire creets Database
-    Creet.findAll({ 
+    const { page, size } = req.query;
+    const { limit, offset } = pagination.getPagination(page, size);
+    Creet.findAndCountAll({ 
+        offset: offset,
+        limit: limit,
         attributes: ["id", "content", "createdAt", "userId"],
         include: [
         {
@@ -36,13 +43,15 @@ exports.getAllCreets = (req, res) => {
         }],
         order: [["createdAt", "DESC"]],
         }) 
-        .then(creets => {             
-            return res.status(200).send(creets.map(el => el.toJSON()));
+        .then(data => {             
+            const response = pagination.getPagingData(data, page, limit);
+            return res.status(200).send(response);
         })
         .catch(err => {
             return res.status(500).send({ message: err.message });
         })
 };
+
 exports.deleteCreet = (req, res) => {
     // Check same author as creet & delete
     const reqUserId = req.userId;
@@ -63,6 +72,7 @@ exports.deleteCreet = (req, res) => {
         return res.status(500).send({ message: err.message });
     });
 };
+
 exports.updateCreet = (req, res) => {
     // Check same author as creet & update content
     const reqUserId = req.userId;
@@ -83,6 +93,7 @@ exports.updateCreet = (req, res) => {
             return res.status(500).send({ message: err.message });
         });
 };
+
 exports.recreet = (req, res) => {
     // Check if not recreeting same author
     const reqUserId = req.userId;
