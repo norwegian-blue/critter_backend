@@ -40,7 +40,12 @@ exports.getAllCreets = (req, res) => {
                 model: User,
                 attributes: ["username", "id"],
             }
-        }],
+        },
+        {    
+            // Include likes association
+            association: "like",
+            attributes: ["id"],
+        }], 
         order: [["createdAt", "DESC"]],
         }) 
         .then(data => {             
@@ -119,4 +124,22 @@ exports.recreet = (req, res) => {
         .catch(err => {
             return res.status(500).send({ message: err.message });
         });
+};
+
+exports.upvoteCreet = (req, res) => {
+    const creetId = req.params.id;
+    const reqUserId = req.userId;
+    Creet.findByPk(creetId)
+        .then(creet => {
+            creet.addLike(reqUserId);
+            creet.countLike()
+            .then(numLikes => {
+                console.log(numLikes);
+                return res.status(200).send({ likes: numLikes });
+            })
+        }) 
+        .catch(err => {
+            return res.status(500).send({ message: err.message });
+        });
+        
 };

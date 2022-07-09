@@ -54,5 +54,7 @@ db.creet.belongsTo(db.user, {
 db.creet.belongsTo(db.creet, { 
     as: 'reCreet', 
 });
+// User-Creet likes associations
+db.creet.belongsToMany(db.user, { through: "creetUserLikes", as: "like" });
 
 module.exports = db;

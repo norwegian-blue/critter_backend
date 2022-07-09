@@ -44,4 +44,11 @@ module.exports = function(app) {
         controller.recreet
 
     );
+    app.post(
+        "/api/creets/upvote/:id",
+        [
+            authJwt.verifyToken,
+        ],
+        controller.upvoteCreet
+    )
 };
