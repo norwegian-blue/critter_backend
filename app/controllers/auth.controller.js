@@ -123,3 +123,20 @@ exports.getUsers = (req, res) => {
         })
     })
 };
+exports.approve = (req, res) => {
+    User.findByPk(req.params.id)
+    .then(async user => {
+        if (user.status === 'ADMIN') {
+            return res.status(409).send({ message: "cannot approve ADMIN" });
+        }
+        await user.update({
+            role: "USER",
+        });
+        return res.status(200).send({ message: "successfully approved" });
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    });
+}

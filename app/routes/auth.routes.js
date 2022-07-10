@@ -43,4 +43,12 @@ module.exports = function(app) {
         ],
         controller.getUsers
     );
+    app.post(
+        "/api/auth/approve/:id",
+        [
+            authJwt.verifyToken,
+            verifySignup.verifyAdmin,
+        ],
+        controller.approve
+    );
 };
