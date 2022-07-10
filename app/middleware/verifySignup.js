@@ -27,20 +27,33 @@ const verifyAdmin = (req, res, next) => {
         next();
     })
     .catch(err => {
-        return res.status(500).send({ message: `Server error: ${err.message}`});
+        return res.status(500).send({ message: `Server error: ${err.message}` });
     });
 };
 const verifySameId = (req, res, next) => {
+    // Check IDs are provided
     if (!req.userId || !req.params.id) {
         return res.status(403).send({
             message: "No user ID provided"
         });
-    } else if (req.userId != req.params.id) {
-        return res.status(403).send({
-            message: "Request ID does not match user ID"
-        });
     }
-    next();
+
+    // Return on ID mismatch
+    if (req.userId != req.params.id) {
+        // Check if ADMIN
+        User.findByPk(req.userId)
+        .then(user => {
+            if (user.role !== 'ADMIN') {
+                return res.status(403).send({ message: "Request ID does not match user ID" });
+            }
+            next();
+        })
+        .catch(err => {
+            return res.status(500).send({ message: `Server error: ${err.message}` });
+        });
+    } else {
+        next();
+    }
 };
 const verifySignup = {
     checkDuplicateUsername: checkDuplicateUsername,
