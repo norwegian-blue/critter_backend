@@ -1,3 +1,4 @@
+const { verify } = require("jsonwebtoken");
 const db = require("../models");
 const User = db.user;
 checkDuplicateUsername = (req, res, next) => {
@@ -16,7 +17,14 @@ checkDuplicateUsername = (req, res, next) => {
         next();
     });
 };
-const verifySignup = {
-    checkDuplicateUsername: checkDuplicateUsername
+verifyAdmin = (req, res, next) => {
+    // Check user has admin role
+    next();
 };
+
+const verifySignup = {
+    checkDuplicateUsername: checkDuplicateUsername,
+    verifyAdmin: verifyAdmin
+};
+
 module.exports = verifySignup;

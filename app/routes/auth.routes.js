@@ -35,4 +35,12 @@ module.exports = function(app) {
         ],
         controller.update
     );
+    app.get(
+        "/api/auth/user",
+        [
+            authJwt.verifyToken,
+            verifySignup.verifyAdmin,
+        ],
+        controller.getUsers
+    );
 };

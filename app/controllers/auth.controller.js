@@ -2,7 +2,6 @@ const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
-const { user } = require("../models");
 const User = db.user;
 exports.signup = (req, res) => {
     // Save User to Database
@@ -109,4 +108,18 @@ exports.update = (req, res) => {
                 message: `Server side error, could not to delete user ${userId}! ${err.message}`
             })
         });
+};
+exports.getUsers = (req, res) => {
+    User.findAll({
+        attributes: ["username", "id", "role"],
+        order: [["username", "ASC"]],
+    })
+    .then(data => {
+        return res.status(200).send(data.map(el => el.toJSON()));
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    })
 };
