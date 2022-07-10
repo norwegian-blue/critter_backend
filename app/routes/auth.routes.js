@@ -23,7 +23,7 @@ module.exports = function(app) {
         "/api/auth/user/:id",
         [
             authJwt.verifyToken,
-            authJwt.verifyId,
+            verifySignup.verifySameId,
         ],
         controller.delete
     );
@@ -31,7 +31,7 @@ module.exports = function(app) {
         "/api/auth/user/:id",
         [
             authJwt.verifyToken,
-            authJwt.verifyId
+            verifySignup.verifySameId,
         ],
         controller.update
     );

@@ -111,6 +111,9 @@ exports.update = (req, res) => {
 };
 exports.getUsers = (req, res) => {
     User.findAll({
+        where: {
+            role: ["USER", "PENDING"],
+        },
         attributes: ["username", "id", "role"],
         order: [["username", "ASC"]],
     })

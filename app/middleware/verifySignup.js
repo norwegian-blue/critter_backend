@@ -1,7 +1,7 @@
 const { verify } = require("jsonwebtoken");
 const db = require("../models");
 const User = db.user;
-checkDuplicateUsername = (req, res, next) => {
+const checkDuplicateUsername = (req, res, next) => {
     // Username
     User.findOne({
         where: {
@@ -17,14 +17,35 @@ checkDuplicateUsername = (req, res, next) => {
         next();
     });
 };
-verifyAdmin = (req, res, next) => {
+const verifyAdmin = (req, res, next) => {
     // Check user has admin role
+    User.findByPk(req.userId)
+    .then(user => {
+        if (user.role !== "ADMIN") {
+            return res.status(401).send({ message: "Admin rights required for the operation!" });
+        }
+        next();
+    })
+    .catch(err => {
+        return res.status(500).send({ message: `Server error: ${err.message}`});
+    });
+};
+const verifySameId = (req, res, next) => {
+    if (!req.userId || !req.params.id) {
+        return res.status(403).send({
+            message: "No user ID provided"
+        });
+    } else if (req.userId != req.params.id) {
+        return res.status(403).send({
+            message: "Request ID does not match user ID"
+        });
+    }
     next();
 };
-
 const verifySignup = {
     checkDuplicateUsername: checkDuplicateUsername,
-    verifyAdmin: verifyAdmin
+    verifyAdmin: verifyAdmin,
+    verifySameId: verifySameId,
 };
 
 module.exports = verifySignup;
