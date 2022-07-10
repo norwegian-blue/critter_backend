@@ -43,7 +43,7 @@ exports.getAllCreets = (req, res) => {
         },
         {    
             // Include likes association
-            association: "like",
+            association: "likes",
             attributes: ["id"],
         }], 
         order: [["createdAt", "DESC"]],
@@ -131,8 +131,8 @@ exports.upvoteCreet = (req, res) => {
     const reqUserId = req.userId;
     Creet.findByPk(creetId)
         .then(async creet => {
-            await creet.addLike(reqUserId);
-            creet.countLike()
+            await creet.addLikes(reqUserId);
+            creet.countLikes()
             .then(numLikes => {
                 return res.status(200).send({ likes: numLikes });
             })
