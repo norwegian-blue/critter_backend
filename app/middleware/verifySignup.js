@@ -1,4 +1,5 @@
 const { verify } = require("jsonwebtoken");
+const { user } = require("../models");
 const db = require("../models");
 const User = db.user;
 const checkDuplicateUsername = (req, res, next) => {
@@ -55,10 +56,24 @@ const verifySameId = (req, res, next) => {
         next();
     }
 };
+const verifyPermission = (req, res, next) => {
+    User.findByPk(req.userId)
+    .then((user) => {
+        if (user.role === 'PENDING') {
+            return res.status(403).send({ message: `User -${user.username}- is pending approval, please contact the admin!` });
+        }
+        next();
+    })
+    .catch(err => {
+        return res.status(500).send({ message: `Server error: ${err.message}` });
+    });
+};
+
 const verifySignup = {
     checkDuplicateUsername: checkDuplicateUsername,
     verifyAdmin: verifyAdmin,
     verifySameId: verifySameId,
+    verifyPermission: verifyPermission,
 };
 
 module.exports = verifySignup;
