@@ -2,7 +2,6 @@ const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
-const { user } = require("../models");
 const User = db.user;
 exports.signup = (req, res) => {
     // Save User to Database
@@ -38,11 +37,12 @@ exports.signin = (req, res) => {
                 });
             }
             var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400 // 24 hours
+                expiresIn: 7 * 24 * 3600 // 1 week
             });
             res.status(200).send({
                 id: user.id,
                 username: user.username,
+                role: user.role,
                 accessToken: token
             });
         })
@@ -110,3 +110,54 @@ exports.update = (req, res) => {
             })
         });
 };
+exports.getUsers = (req, res) => {
+    User.findAll({
+        where: {
+            role: ["USER", "PENDING"],
+        },
+        attributes: ["username", "id", "role"],
+        order: [["username", "ASC"]],
+    })
+    .then(data => {
+        return res.status(200).send(data.map(el => el.toJSON()));
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    })
+};
+exports.approve = (req, res) => {
+    User.findByPk(req.params.id)
+    .then(async user => {
+        if (user.status === 'ADMIN') {
+            return res.status(409).send({ message: "cannot approve ADMIN" });
+        }
+        await user.update({
+            role: "USER",
+        });
+        return res.status(200).send({ message: "successfully approved" });
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    });
+}
+exports.suspend = (req, res) => {
+    User.findByPk(req.params.id)
+    .then(async user => {
+        if (user.status === 'ADMIN') {
+            return res.status(409).send({ message: "cannot suspend ADMIN" });
+        }
+        await user.update({
+            role: "PENDING",
+        });
+        return res.status(200).send({ message: "successfully suspended" });
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    });
+}

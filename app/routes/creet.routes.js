@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const { authJwt, verifySignup } = require("../middleware");
 const controller = require("../controllers/creet.controller");
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -12,6 +12,7 @@ module.exports = function(app) {
         "/api/creets",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.postCreet
     );
@@ -19,6 +20,7 @@ module.exports = function(app) {
         "/api/creets",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.getAllCreets
     );
@@ -26,6 +28,7 @@ module.exports = function(app) {
         "/api/creets/:id",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.deleteCreet
     );
@@ -33,6 +36,7 @@ module.exports = function(app) {
         "/api/creets/:id",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.updateCreet
     );
@@ -40,6 +44,7 @@ module.exports = function(app) {
         "/api/creets/recreet/:id",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.recreet
 
@@ -48,6 +53,7 @@ module.exports = function(app) {
         "/api/creets/upvote/:id",
         [
             authJwt.verifyToken,
+            verifySignup.verifyPermission,
         ],
         controller.upvoteCreet
     )
