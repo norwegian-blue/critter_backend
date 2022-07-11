@@ -144,3 +144,20 @@ exports.approve = (req, res) => {
         })
     });
 }
+exports.suspend = (req, res) => {
+    User.findByPk(req.params.id)
+    .then(async user => {
+        if (user.status === 'ADMIN') {
+            return res.status(409).send({ message: "cannot suspend ADMIN" });
+        }
+        await user.update({
+            role: "PENDING",
+        });
+        return res.status(200).send({ message: "successfully suspended" });
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Server side error: ${err.message}`
+        })
+    });
+}

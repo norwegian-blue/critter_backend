@@ -51,4 +51,12 @@ module.exports = function(app) {
         ],
         controller.approve
     );
+    app.post(
+        "/api/auth/suspend/:id",
+        [
+            authJwt.verifyToken,
+            verifySignup.verifyAdmin,
+        ],
+        controller.suspend
+    );
 };
