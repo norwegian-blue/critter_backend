@@ -7,7 +7,7 @@ const getPagingData = (data, page, limit) => {
     let { count: totalCreets, rows: creets } = data;
     creets = creets.map(el => el.toJSON());
     const currentPage = page;
-    const totalPages = Math.ceil(totalCreets / limit); 
+    const totalPages = Math.ceil(totalCreets / limit) - 1; 
     return { totalCreets, creets, currentPage, totalPages };
 };
 const pagination = {

@@ -29,7 +29,7 @@ exports.getAllCreets = (req, res) => {
         {
             // Include author info
             model: User,
-            attributes: ["username", "id"],
+            attributes: ["username", "id", "alias"],
         }, 
         {
             // Include re-creet info (and nested re-creet author)
@@ -38,7 +38,7 @@ exports.getAllCreets = (req, res) => {
             attributes: ["id", "content", "createdAt", "userId"],
             include: {
                 model: User,
-                attributes: ["username", "id"],
+                attributes: ["username", "id", "alias"],
             }
         },
         {    
