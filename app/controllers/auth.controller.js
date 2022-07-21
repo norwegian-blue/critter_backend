@@ -7,7 +7,8 @@ exports.signup = (req, res) => {
     // Save User to Database
     User.create({
         username: req.body.username,
-        password: bcrypt.hashSync(req.body.password, 8)
+        password: bcrypt.hashSync(req.body.password, 8),
+        alias: req.body.username,
     })
         .then(() => {
             res.send({ message: "User was created successfully!" });
@@ -42,6 +43,7 @@ exports.signin = (req, res) => {
             res.status(200).send({
                 id: user.id,
                 username: user.username,
+                alias: user.alias,
                 role: user.role,
                 accessToken: token
             });
@@ -84,6 +86,7 @@ exports.update = (req, res) => {
                 // New username (no dubplicate) or password update of current user
                 User.update({
                     username: req.body.username,
+                    alias: req.body.username,
                     password: bcrypt.hashSync(req.body.password, 8),
                 }, {
                     where: {id: userId}
@@ -91,7 +94,8 @@ exports.update = (req, res) => {
                     .then(() => {
                         return res.status(200).send({
                             id: userId,
-                            username: req.body.username
+                            username: req.body.username,
+                            alias: req.body.username,
                         });
                     })
                     .catch(err => {
@@ -115,7 +119,7 @@ exports.getUsers = (req, res) => {
         where: {
             role: ["USER", "PENDING"],
         },
-        attributes: ["username", "id", "role"],
+        attributes: ["username", "id", "role", "alias"],
         order: [["username", "ASC"]],
     })
     .then(data => {
